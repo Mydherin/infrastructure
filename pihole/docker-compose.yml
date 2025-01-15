@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+
+  pihole:
+    image: pihole/pihole:2024.07.0
+    restart: unless-stopped
+    volumes:
+      - 'data:/etc/pihole/'
+      - 'dnsmasq:/etc/dnsmasq.d/'
+    environment:
+      - TZ=Europe/Madrid
+      - WEBPASSWORD=${PIHOLE_PASSWORD}
+    dns:
+      - 127.0.0.1
+      - 8.8.8.8
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+      - "8503:80"
+      - "8504:443"
+    labels:
+      # Middleware definition
+      - "traefik.http.middlewares.redirect-to-admin.redirectregex.regex=^https?://pihole\\.skypea\\.dev/?$"
+      - "traefik.http.middlewares.redirect-to-admin.redirectregex.replacement=https://pihole.skypea.dev/admin"
+      - "traefik.http.middlewares.redirect-to-admin.redirectregex.permanent=true"
+      - "traefik.enable=true"
+      - "traefik.http.routers.pihole.rule=Host(`pihole.skypea.dev`)"
+      - "traefik.http.routers.pihole.entrypoints=websecure"
+      - "traefik.http.routers.pihole.tls.certresolver=myresolver"
+      - "traefik.http.routers.pihole.service=pihole"
+      - "traefik.http.services.pihole.loadbalancer.server.port=80"
+      - "traefik.http.routers.pihole.middlewares=redirect-to-admin"
+    networks:
+      - traefik
+
+volumes:
+  data:
+  dnsmasq:
+
+networks:
+  traefik:
+    external: true

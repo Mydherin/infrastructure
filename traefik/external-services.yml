@@ -1,0 +1,47 @@
+http:
+  routers:
+    wassa:
+      rule: "Host(`wassa.skypea.dev`)"
+      service: wassa
+      tls:
+        certResolver: myresolver
+      entrypoints:
+        - websecure
+    discord:
+      rule: "Host(`discord.skypea.dev`)"
+      service: discord
+      tls:
+        certResolver: myresolver
+      entrypoints:
+        - websecure
+    jazztel:
+      rule: "Host(`jazztel.skypea.dev`)"
+      service: jazztel
+      tls:
+        certResolver: myresolver
+      entrypoints:
+        - websecure
+    pokemon:
+      rule: "Host(`pokemon.skypea.dev`)"
+      service: pokemon
+      tls:
+        certResolver: myresolver
+      entrypoints:
+        - websecure
+  services:
+    wassa:
+      loadBalancer:
+        servers:
+          - url: "https://web.whatsapp.com/"
+    discord:
+      loadBalancer:
+        servers:
+          - url: "https://discord.com"
+    jazztel:
+      loadBalancer:
+        servers:
+          - url: "http://10.10.22.1"
+    pokemon:
+      loadBalancer:
+        servers:
+          - url: "https://www.pokemon.com"
