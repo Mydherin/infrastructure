@@ -22,7 +22,7 @@ services:
       - "CF_API_EMAIL=${CF_API_EMAIL}"
       - "CF_API_KEY=${CF_API_KEY}"
     volumes:
-      - "letsencrypt:/letsencrypt"
+      - "./letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "${EXTERNAL_SERVICES_DIRECTORY}:/etc/traefik/dynamic_conf.yml:ro"
     ports:
@@ -43,9 +43,6 @@ services:
       - "traefik.http.routers.api.tls.certresolver=myresolver"
     networks:
       - traefik
-
-volumes:
-  letsencrypt:
 
 networks:
   traefik:
