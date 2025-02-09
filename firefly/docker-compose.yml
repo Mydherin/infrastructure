@@ -20,6 +20,22 @@ services:
       - "traefik.http.services.firefly.loadbalancer.server.port=8080"
     depends_on:
       - db
+  firefly-importer:
+    image: ghcr.io/mydherin/app-firefly-importer:v0.1.0
+    hostname: firefly_importer
+    restart: unless-stopped
+    env_file: .importer.env
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.firefly-importer.rule=Host(`firefly-importer.skypea.dev`)"
+      - "traefik.http.routers.firefly-importer.entrypoints=websecure"
+      - "traefik.http.routers.firefly-importer.tls.certresolver=myresolver"
+      - "traefik.http.routers.firefly-importer.service=firefly-importer"
+      - "traefik.http.services.firefly-importer.loadbalancer.server.port=3000"
+    networks:
+      - traefik
+    depends_on:
+      - firefly
   db:
     image: mariadb:11.7.1-ubi-rc
     hostname: db
