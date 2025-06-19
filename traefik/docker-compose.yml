@@ -1,8 +1,6 @@
-version: '3.8'
-
 services:
   traefik:
-    image: traefik:v3.3.0
+    image: traefik:v3.4.1
     restart: unless-stopped
     command:
       - "--log.level=DEBUG"
@@ -24,7 +22,7 @@ services:
     volumes:
       - "./letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "${EXTERNAL_SERVICES_DIRECTORY}:/etc/traefik/dynamic_conf.yml:ro"
+      - "./external-services.yml:/etc/traefik/dynamic_conf.yml:ro"
     ports:
       - "80:80"
       - "443:443"
