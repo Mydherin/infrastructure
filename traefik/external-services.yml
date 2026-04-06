@@ -1,4 +1,10 @@
 http:
+  middlewares:
+    local-only:
+      ipAllowList:
+        sourceRange:
+          - "10.10.22.0/24"
+
   routers:
     jazztel:
       rule: "Host(`jazztel.skypea.dev`)"
@@ -7,6 +13,8 @@ http:
         certResolver: myresolver
       entrypoints:
         - websecure
+      middlewares:
+        - local-only
   services:
     jazztel:
       loadBalancer:
